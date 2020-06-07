@@ -2,7 +2,7 @@
   "name": "@fuelrats/web-util",
   "version": "1.0.0",
   "description": "Utility package for the fuelrats.com website. Mainly contains redux tools",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FuelRats/fuelrats.com-redux-utils.git"
@@ -47,6 +47,8 @@
     "@babel/plugin-transform-strict-mode": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@fuelrats/eslint-config": "^2.2.0-canary.2",
+    "axios": "^0.19.2",
+    "axios-mock-adapter": "^1.18.1",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.0.1",
     "doctoc": "^1.4.0",
