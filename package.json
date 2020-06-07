@@ -1,8 +1,8 @@
 {
-  "name": "@fuelrats/redux-utils",
+  "name": "@fuelrats/web-util",
   "version": "1.0.0",
-  "description": "Utilities for the fuelrats.com redux store.",
-  "main": "dist/index.js",
+  "description": "Utility package for the fuelrats.com website. Mainly contains redux tools",
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FuelRats/fuelrats.com-redux-utils.git"
@@ -35,26 +35,31 @@
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
     "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-decorators": "^7.10.1",
+    "@babel/plugin-proposal-export-default-from": "^7.10.1",
+    "@babel/plugin-proposal-export-namespace-from": "^7.10.1",
+    "@babel/plugin-proposal-function-bind": "^7.10.1",
+    "@babel/plugin-proposal-function-sent": "^7.10.1",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.10.1",
+    "@babel/plugin-proposal-numeric-separator": "^7.10.1",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.10.1",
+    "@babel/plugin-proposal-throw-expressions": "^7.10.1",
+    "@babel/plugin-transform-strict-mode": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@fuelrats/eslint-config": "^2.2.0-canary.2",
-    "@rollup/plugin-node-resolve": "^8.0.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.0.1",
     "doctoc": "^1.4.0",
-    "eslint": "^7.1.0",
+    "eslint": "^7.2.0",
     "eslint-import-resolver-node": "^0.3.3",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsdoc": "^27.0.2",
+    "eslint-plugin-jsdoc": "^27.0.4",
     "jest": "^26.0.1",
-    "jest-extended": "^0.11.5",
-    "rollup": "^2.13.0",
-    "rollup-plugin-auto-external": "^2.0.0",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-uglify": "^6.0.4"
+    "jest-extended": "^0.11.5"
   },
   "dependencies": {
-    "@fuelrats/argument-validator-utils": "^1.0.1",
+    "@fuelrats/argument-validator-utils": "^1.1.0-canary.4",
     "immer": "^6.0.9"
   }
 }

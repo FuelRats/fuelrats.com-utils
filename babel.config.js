@@ -3,6 +3,16 @@ module.exports = {
     '@babel/preset-env',
   ],
   plugins: [
-    '@babel/plugin-proposal-class-properties',
+    ['@babel/proposal-decorators', { legacy: true }],
+    ['@babel/proposal-class-properties', { loose: true }],
+    '@babel/proposal-export-default-from',
+    '@babel/proposal-export-namespace-from',
+    '@babel/proposal-function-bind',
+    '@babel/proposal-function-sent',
+    '@babel/proposal-logical-assignment-operators',
+    '@babel/proposal-numeric-separator',
+    '@babel/proposal-optional-catch-binding',
+    '@babel/proposal-throw-expressions',
+    '@babel/transform-strict-mode',
   ],
 }
