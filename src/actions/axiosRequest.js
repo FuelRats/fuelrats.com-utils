@@ -5,11 +5,11 @@ import createAxiosFSA from './createAxiosFSA'
 
 
 
-const axiosRequest = (service) => {
+const axiosRequest = (service, ...persistMeta) => {
   return (type = isRequired('type'), config, ...meta) => {
     return async (dispatch) => {
       const response = await service.request(config)
-      return dispatch(createAxiosFSA(type, response, ...meta))
+      return dispatch(createAxiosFSA(type, response, ...persistMeta, ...meta))
     }
   }
 }
