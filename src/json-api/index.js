@@ -5,13 +5,11 @@ import { produce } from 'immer'
 
 
 
-const CREATES_RELATIONSHIP = '__jsonapi/create/relationship'
-const DELETES_RESOURCE = '__jsonapi/delete/resource'
-const DELETES_RELATIONSHIP = '__jsonapi/delete/relationship'
-const LISTS_RESOURCES = '__jsonapi/list/resource'
-const READS_RESOURCE = '__jsonapi/read/resource'
-const JSONAPI_MODE = '__jsonapi/mode'
-const RESOURCE = '__jsonapi/resource-linkage'
+const JSONAPI_SCOPE = '__jsonapi'
+const CREATES_RELATIONSHIP = `${JSONAPI_SCOPE}/create/relationship`
+const DELETES_RELATIONSHIP = `${JSONAPI_SCOPE}/delete/relationship`
+const DELETES_RESOURCE = `${JSONAPI_SCOPE}/delete/resource`
+const RESOURCE = `${JSONAPI_SCOPE}/resource-linkage`
 
 
 
@@ -68,10 +66,6 @@ const createJSONAPIReducer = (reducerId, config) => {
     })
   }
 
-
-
-
-
   const deleteResource = (draftState, { type, id }) => {
     if (!config[type]) {
       // prevent overreach into uncontrolled state members
@@ -79,10 +73,6 @@ const createJSONAPIReducer = (reducerId, config) => {
     }
     delete draftState[type][id]
   }
-
-
-
-
 
   const iterateResourceRelationships = (draftState, resources, callback) => {
     resources.forEach((resource) => {
@@ -116,7 +106,34 @@ const createJSONAPIReducer = (reducerId, config) => {
     })
   }
 
-  const reduceRelationships = (draftState, action) => {
+  return produce((draftState, action) => {
+    // Don't reduce action if the action doesn't request it, or there's an error.
+    if (action.meta?.[JSONAPI_SCOPE] !== reducerId || action.error) {
+      return
+    }
+
+    // reduce any included resources
+    if (action.payload?.included) {
+      insertIncludedResources(draftState, action.payload.included)
+    }
+
+    // reduce any resources in data
+    const payloadData = action.payload?.data
+    if (payloadData) {
+      if (Array.isArray(payloadData)) {
+        insertResourceList(draftState, payloadData)
+      } else {
+        insertResource(draftState, payloadData)
+      }
+    }
+
+    // If a resource was deleted, delete it.
+    const deletedResource = action.meta[DELETES_RESOURCE]
+    if (deletedResource) {
+      deleteResource(draftState, deletedResource)
+    }
+
+    // generate new relationship links
     const newRelationships = action.meta[CREATES_RELATIONSHIP]
     if (newRelationships) {
       iterateResourceRelationships(draftState, newRelationships, (targetData, relKey, relData) => {
@@ -139,6 +156,7 @@ const createJSONAPIReducer = (reducerId, config) => {
       })
     }
 
+    // remove old relationship links
     const deletedRelationships = action.meta[DELETES_RELATIONSHIP]
     if (deletedRelationships) {
       iterateResourceRelationships(draftState, deletedRelationships, (targetData, relKey, relData) => {
@@ -161,64 +179,21 @@ const createJSONAPIReducer = (reducerId, config) => {
         }
       })
     }
-  }
-
-
-
-
-
-  return produce((draftState, action) => {
-    // Don't reduce action if the action doesn't request it, or there's an error.
-    if (!action.meta?.[`${JSONAPI_MODE}/${reducerId}`] || action.error) {
-      return
-    }
-
-    // reduce any included resources
-    if (action.payload.included) {
-      insertIncludedResources(draftState, action.payload.included)
-    }
-
-    // Find out how we're interpreting data from the API, and reduce accordingly
-    switch (action.meta[`${JSONAPI_MODE}/${reducerId}`]) {
-      case READS_RESOURCE:
-        insertResource(draftState, action.payload.data)
-        break
-
-      case LISTS_RESOURCES:
-        insertResourceList(draftState, action.payload.data)
-        break
-
-      case DELETES_RESOURCE:
-        deleteResource(draftState, action.meta[DELETES_RESOURCE])
-        break
-
-      default:
-        break
-    }
-
-    reduceRelationships(draftState, action)
   })
 }
 
 
 
-
-const deletesResource = (reducerId, type, id) => {
+const updatesResources = (reducerId) => {
   return {
-    [`${JSONAPI_MODE}/${reducerId}`]: DELETES_RESOURCE,
+    [JSONAPI_SCOPE]: reducerId,
+  }
+}
+
+const deletesResource = (reducerId, { type, id } = {}) => {
+  return {
+    [JSONAPI_SCOPE]: reducerId,
     [DELETES_RESOURCE]: { type, id },
-  }
-}
-
-const listsResources = (reducerId) => {
-  return {
-    [`${JSONAPI_MODE}/${reducerId}`]: LISTS_RESOURCES,
-  }
-}
-
-const readsResource = (reducerId) => {
-  return {
-    [`${JSONAPI_MODE}/${reducerId}`]: READS_RESOURCE,
   }
 }
 
@@ -245,8 +220,7 @@ const defineRelationship = (type = isRequired('type'), id = isRequired('id'), re
 export {
   createJSONAPIReducer,
   defineRelationship,
-  readsResource,
-  listsResources,
+  updatesResources,
   deletesResource,
   createsRelationship,
   deletesRelationship,
