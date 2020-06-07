@@ -5,13 +5,11 @@ import { produce } from 'immer'
 
 
 
-const CREATES_RESOURCE = '__jsonapi/create/resource'
 const CREATES_RELATIONSHIP = '__jsonapi/create/relationship'
 const DELETES_RESOURCE = '__jsonapi/delete/resource'
 const DELETES_RELATIONSHIP = '__jsonapi/delete/relationship'
 const LISTS_RESOURCES = '__jsonapi/list/resource'
 const READS_RESOURCE = '__jsonapi/read/resource'
-const UPDATES_RESOURCE = '__jsonapi/update/resource'
 const JSONAPI_MODE = '__jsonapi/mode'
 const RESOURCE = '__jsonapi/resource-linkage'
 
@@ -19,7 +17,7 @@ const RESOURCE = '__jsonapi/resource-linkage'
 
 
 
-const createJSONAPIReducer = (config) => {
+const createJSONAPIReducer = (reducerId, config) => {
   const resolveResourceConfig = (resource) => {
     if (!resource || !config[resource.type]) {
       return undefined
@@ -171,7 +169,7 @@ const createJSONAPIReducer = (config) => {
 
   return produce((draftState, action) => {
     // Don't reduce action if the action doesn't request it, or there's an error.
-    if (!action.meta?.[JSONAPI_MODE] || action.error) {
+    if (!action.meta?.[`${JSONAPI_MODE}/${reducerId}`] || action.error) {
       return
     }
 
@@ -181,9 +179,7 @@ const createJSONAPIReducer = (config) => {
     }
 
     // Find out how we're interpreting data from the API, and reduce accordingly
-    switch (action.meta[JSONAPI_MODE]) {
-      case CREATES_RESOURCE:
-      case UPDATES_RESOURCE:
+    switch (action.meta[`${JSONAPI_MODE}/${reducerId}`]) {
       case READS_RESOURCE:
         insertResource(draftState, action.payload.data)
         break
@@ -207,35 +203,22 @@ const createJSONAPIReducer = (config) => {
 
 
 
-
-const createsResource = () => {
+const deletesResource = (reducerId, type, id) => {
   return {
-    [JSONAPI_MODE]: CREATES_RESOURCE,
-  }
-}
-
-const deletesResource = (type, id) => {
-  return {
-    [JSONAPI_MODE]: DELETES_RESOURCE,
+    [`${JSONAPI_MODE}/${reducerId}`]: DELETES_RESOURCE,
     [DELETES_RESOURCE]: { type, id },
   }
 }
 
-const listsResources = () => {
+const listsResources = (reducerId) => {
   return {
-    [JSONAPI_MODE]: LISTS_RESOURCES,
+    [`${JSONAPI_MODE}/${reducerId}`]: LISTS_RESOURCES,
   }
 }
 
-const readsResource = () => {
+const readsResource = (reducerId) => {
   return {
-    [JSONAPI_MODE]: READS_RESOURCE,
-  }
-}
-
-const updatesResource = () => {
-  return {
-    [JSONAPI_MODE]: UPDATES_RESOURCE,
+    [`${JSONAPI_MODE}/${reducerId}`]: READS_RESOURCE,
   }
 }
 
@@ -255,14 +238,16 @@ const defineRelationship = (type = isRequired('type'), id = isRequired('id'), re
   return { type, id, relationships }
 }
 
+
+
+
+
 export {
   createJSONAPIReducer,
-  createsResource,
   defineRelationship,
   readsResource,
   listsResources,
   deletesResource,
-  updatesResource,
   createsRelationship,
   deletesRelationship,
   RESOURCE,
