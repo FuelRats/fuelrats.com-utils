@@ -1,7 +1,7 @@
-/* eslint-disable no-magic-numbers */// Not even gonna bother defining consts when it's clear what the numbers here are for.
+/* eslint-disable no-magic-numbers */// Not even gonna bother defining consts when it's clear what ths here are for.
 
 
-class HttpStatusText {
+export class HttpStatusText {
   // Informational
   static 100 = 'Continue'
   static 101 = 'Switching Protocols'
@@ -76,10 +76,9 @@ class HttpStatusText {
   static 511 = 'Network Authentication Required'
   static 599 = 'Network Connect Timeout Error'
 }
-Object.freeze(HttpStatusText)
 
 
-class HttpStatus {
+export class HttpStatus {
   // Informational
   static CONTINUE = 100
   static SWITCHING_PROTOCOLS = 101
@@ -154,36 +153,35 @@ class HttpStatus {
   static NETWORK_CONNECTION_TIMEOUT_ERROR = 599
 
   // Helper Functions
-  static isInformational = (code) => {
+  static isInformational (code) {
     return code >= 100 && code < 200
   }
 
-  static isSuccess = (code) => {
+  static isSuccess (code) {
     return code >= 200 && code < 300
   }
 
-  static isRedirection = (code) => {
+  static isRedirection (code) {
     return code >= 300 && code < 400
   }
 
-  static isError = (code) => {
+  static isError (code) {
     return code >= 400 && code < 600
   }
 
-  static isClientError = (code) => {
+  static isClientError (code) {
     return code >= 400 && code < 500
   }
 
-  static isServerError = (code) => {
+  static isServerError (code) {
     return code >= 500 && code < 600
   }
 }
-Object.freeze(HttpStatus)
 
 
 
 
-class HttpMethod {
+export class HttpMethod {
   static GET = 'GET'
   static HEAD = 'HEAD'
   static POST = 'POST'
@@ -193,14 +191,4 @@ class HttpMethod {
   static OPTIONS = 'OPTIONS'
   static TRACE = 'TRACE'
   static PATCH = 'PATCH'
-}
-Object.freeze(HttpMethod)
-
-
-
-
-export {
-  HttpMethod,
-  HttpStatus,
-  HttpStatusText,
 }

@@ -1,21 +1,13 @@
 import isRequired from '@fuelrats/argument-validator-utils/isRequired'
 import { produce } from 'immer'
 
-
-
-
-
 const JSONAPI_SCOPE = '__jsonapi'
 const CREATES_RELATIONSHIP = `${JSONAPI_SCOPE}/create/relationship`
 const DELETES_RELATIONSHIP = `${JSONAPI_SCOPE}/delete/relationship`
 const DELETES_RESOURCE = `${JSONAPI_SCOPE}/delete/resource`
 const RESOURCE = `${JSONAPI_SCOPE}/resource-linkage`
 
-
-
-
-
-const createJSONAPIReducer = (reducerId, config) => {
+export default function createJSONAPIReducer (reducerId, config) {
   const resolveResourceConfig = (resource) => {
     if (!resource || !config[resource.type]) {
       return undefined
@@ -56,7 +48,7 @@ const createJSONAPIReducer = (reducerId, config) => {
     })
   }
 
-  const insertIncludedResources = (draftState, resources) => {
+  const insertIncludedResources = (draftState, resources = []) => {
     resources.forEach((resource) => {
       insertResource(
         draftState,
@@ -74,7 +66,7 @@ const createJSONAPIReducer = (reducerId, config) => {
     delete draftState[type][id]
   }
 
-  const iterateResourceRelationships = (draftState, resources, callback) => {
+  const mapModifiedRelationshipData = (draftState, resources, callback) => {
     resources.forEach((resource) => {
       const {
         type,
@@ -87,21 +79,21 @@ const createJSONAPIReducer = (reducerId, config) => {
       }
 
       Object.entries(relationships).forEach(([relationshipKey, relationshipData]) => {
-        const resRelationship = draftState[type][id].relationships[relationshipKey]
+        const targetResourceRelationship = draftState[type][id].relationships[relationshipKey]
 
-        if (!resRelationship) {
+        if (!targetResourceRelationship) {
           throw new Error(`Attempted to update a relationship that does not exist for resource type ${type}`)
         }
 
-        if (Array.isArray(resRelationship.data)) {
-          if (!Array.isArray(relationshipData.data)) {
+        if (Array.isArray(targetResourceRelationship.data)) {
+          if (!Array.isArray(relationshipData)) {
             throw new TypeError('Relationship update data for to-many relationships MUST be an array.')
           }
-        } else if (Array.isArray(relationshipData.data)) {
+        } else if (Array.isArray(relationshipData)) {
           throw new TypeError('Relationship update data for to-one relationships MUST NOT be an array.')
         }
 
-        callback(resource, relationshipKey, relationshipData)
+        draftState[type][id].relationships[relationshipKey].data = callback(targetResourceRelationship.data, relationshipData)
       })
     })
   }
@@ -123,7 +115,7 @@ const createJSONAPIReducer = (reducerId, config) => {
       if (Array.isArray(payloadData)) {
         insertResourceList(draftState, payloadData)
       } else {
-        insertResource(draftState, payloadData)
+        insertResource(draftState, resolveResourceConfig(payloadData), payloadData)
       }
     }
 
@@ -136,93 +128,74 @@ const createJSONAPIReducer = (reducerId, config) => {
     // generate new relationship links
     const newRelationships = action.meta[CREATES_RELATIONSHIP]
     if (newRelationships) {
-      iterateResourceRelationships(draftState, newRelationships, (targetData, relKey, relData) => {
-        const { type, id } = targetData
-        const { data: newData } = relData
-
-        if (Array.isArray(newData)) {
-          newData.forEach((newLink) => {
-            draftState[type][id].relationships[relKey].data.push(
-              newLink === RESOURCE
+      mapModifiedRelationshipData(draftState, newRelationships, (targetData, newData) => {
+        if (Array.isArray(targetData)) {
+          return [
+            ...targetData,
+            ...newData.map((newLink) => {
+              return newData === RESOURCE
                 ? { type: action.payload.data.type, id: action.payload.data.id }
-                : newLink,
-            )
-          })
-        } else {
-          draftState[type][id].relationships[relKey].data = newData === RESOURCE
-            ? { type: action.payload.data.type, id: action.payload.data.id }
-            : newData
+                : newLink
+            }),
+          ]
         }
+        return newData === RESOURCE
+          ? { type: action.payload.data.type, id: action.payload.data.id }
+          : newData
       })
     }
 
     // remove old relationship links
     const deletedRelationships = action.meta[DELETES_RELATIONSHIP]
     if (deletedRelationships) {
-      iterateResourceRelationships(draftState, deletedRelationships, (targetData, relKey, relData) => {
-        const { type, id } = targetData
-        const { data: deletedData } = relData
-
-        if (Array.isArray(deletedData)) {
-          draftState[type][id].relationships[relKey].data = relData.data.reduce((acc, link) => {
+      mapModifiedRelationshipData(draftState, deletedRelationships, (targetData, deletedData) => {
+        if (Array.isArray(targetData)) {
+          return targetData.reduce((acc, existingLink) => {
             if (deletedData.find((deletedLink) => {
-              return deletedLink.type === link.type && deletedLink.id === link.id
+              return deletedLink.type === existingLink.type && deletedLink.id === existingLink.id
             })) {
               return acc
             }
 
-            acc.push(link)
+            acc.push(existingLink)
             return acc
           }, [])
-        } else {
-          draftState[type][id].relationships[relKey].data = null
         }
+        return null
       })
     }
   })
 }
 
-
-
-const updatesResources = (reducerId) => {
+export function updatesResources (reducerId) {
   return {
     [JSONAPI_SCOPE]: reducerId,
   }
 }
 
-const deletesResource = (reducerId, { type, id } = {}) => {
+export function deletesResource (reducerId, { type, id }) {
   return {
     [JSONAPI_SCOPE]: reducerId,
     [DELETES_RESOURCE]: { type, id },
   }
 }
 
-const createsRelationship = (...relations) => {
+export function createsRelationship (...relations) {
   return {
     [CREATES_RELATIONSHIP]: relations,
   }
 }
 
-const deletesRelationship = (...relations) => {
+export function deletesRelationship (...relations) {
   return {
     [DELETES_RELATIONSHIP]: relations,
   }
 }
 
-const defineRelationship = (type = isRequired('type'), id = isRequired('id'), relationships = isRequired('relationships')) => {
+export function defineRelationship (
+  type = isRequired('type'),
+  id = isRequired('id'),
+  relationships = isRequired('relationships'),
+) {
   return { type, id, relationships }
-}
-
-
-
-
-
-export {
-  createJSONAPIReducer,
-  defineRelationship,
-  updatesResources,
-  deletesResource,
-  createsRelationship,
-  deletesRelationship,
-  RESOURCE,
 }
