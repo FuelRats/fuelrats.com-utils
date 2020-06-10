@@ -1,6 +1,6 @@
 {
   "name": "@fuelrats/web-util",
-  "version": "0.1.0-rc.0",
+  "version": "0.1.0-rc.1",
   "description": "Utility package for the fuelrats.com website. Mainly contains redux tools",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "yarn eslint .",
     "build": "rm -rf dist && yarn rollup --config",
-    "prepublish": "yarn build"
+    "release": "yarn build && yarn publish dist"
   },
   "bugs": {
     "url": "https://github.com/FuelRats/fuelrats.com-redux-utils/issues"
