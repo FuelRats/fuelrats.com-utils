@@ -1,8 +1,7 @@
 {
   "name": "@fuelrats/web-util",
-  "version": "1.0.0",
+  "version": "0.1.0-rc.0",
   "description": "Utility package for the fuelrats.com website. Mainly contains redux tools",
-  "main": "./index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FuelRats/fuelrats.com-redux-utils.git"
@@ -15,19 +14,18 @@
   },
   "scripts": {
     "lint": "yarn eslint .",
-    "build": "rm -rf dist && yarn babel src -d dist",
+    "build": "rm -rf dist && yarn rollup --config",
     "prepublish": "yarn build"
   },
   "bugs": {
     "url": "https://github.com/FuelRats/fuelrats.com-redux-utils/issues"
   },
   "keywords": [
-    "react",
-    "redux",
     "fuelrats"
   ],
   "license": "BSD-3-Clause",
   "peerDependencies": {
+    "axios": "^0.19",
     "redux": "*",
     "redux-thunk": "*"
   },
@@ -43,10 +41,15 @@
     "@babel/plugin-proposal-logical-assignment-operators": "^7.10.1",
     "@babel/plugin-proposal-numeric-separator": "^7.10.1",
     "@babel/plugin-proposal-optional-catch-binding": "^7.10.1",
+    "@babel/plugin-proposal-private-methods": "^7.10.1",
+    "@babel/plugin-proposal-private-property-in-object": "^7.10.1",
     "@babel/plugin-proposal-throw-expressions": "^7.10.1",
     "@babel/plugin-transform-strict-mode": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@fuelrats/eslint-config": "^2.2.0-canary.2",
+    "@rollup/plugin-babel": "^5.0.3",
+    "@rollup/plugin-multi-entry": "^3.0.1",
+    "@rollup/plugin-node-resolve": "^8.0.1",
     "axios": "^0.19.2",
     "axios-mock-adapter": "^1.18.1",
     "babel-eslint": "^10.1.0",
@@ -55,10 +58,14 @@
     "eslint": "^7.2.0",
     "eslint-import-resolver-node": "^0.3.3",
     "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-jsdoc": "^27.0.4",
+    "eslint-plugin-import": "^2.21.1",
+    "eslint-plugin-jsdoc": "^27.0.5",
     "jest": "^26.0.1",
-    "jest-extended": "^0.11.5"
+    "jest-extended": "^0.11.5",
+    "redux": "^4.0.5",
+    "rollup": "^2.15.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-node-externals": "^2.2.0"
   },
   "dependencies": {
     "@fuelrats/argument-validator-utils": "^1.1.0-canary.4",

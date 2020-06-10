@@ -1,2 +1,6 @@
-# @fuelrats/web-utils
-Various utilities built to reduce redundant boilerplate in our website. Now bundled as a library in the event someone may have use for such things.
+# @fuelrats/web-util
+
+## ⚠ THIS PACKAGE IS IN TESTING ⚠
+
+
+Various packages and Type declarations for use in fuelrats.com and other web-related projects
