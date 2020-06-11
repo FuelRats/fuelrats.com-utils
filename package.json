@@ -1,6 +1,6 @@
 {
   "name": "@fuelrats/web-util",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "description": "Utility package for the fuelrats.com website. Mainly contains redux tools",
   "repository": {
     "type": "git",
@@ -58,8 +58,8 @@
     "eslint": "^7.2.0",
     "eslint-import-resolver-node": "^0.3.3",
     "eslint-plugin-babel": "^5.3.0",
-    "eslint-plugin-import": "^2.21.1",
-    "eslint-plugin-jsdoc": "^27.0.5",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsdoc": "^27.0.6",
     "jest": "^26.0.1",
     "jest-extended": "^0.11.5",
     "redux": "^4.0.5",
@@ -69,6 +69,6 @@
   },
   "dependencies": {
     "@fuelrats/argument-validator-utils": "^1.1.0-canary.4",
-    "immer": "^6.0.9"
+    "immer": "^7.0.0"
   }
 }
