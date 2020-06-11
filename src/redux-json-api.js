@@ -7,6 +7,10 @@ const DELETES_RELATIONSHIP = `${JSONAPI_SCOPE}/delete/relationship`
 const DELETES_RESOURCE = `${JSONAPI_SCOPE}/delete/resource`
 const RESOURCE = `${JSONAPI_SCOPE}/resource-linkage`
 
+
+
+
+
 export default function createJSONAPIReducer (reducerId, config) {
   const resolveResourceConfig = (resource) => {
     if (!resource || !config[resource.type]) {
@@ -15,11 +19,12 @@ export default function createJSONAPIReducer (reducerId, config) {
 
     return {
       target: resource.type,
-      mergeMethod: Object.assign,
+      mergeMethod: (_, target, source) => {
+        return Object.assign(target, source)
+      },
       ...config[resource.type],
     }
   }
-
   const insertResource = (draftState, resourceConfig, resource) => {
     if (!resourceConfig || !resource) {
       return
@@ -33,6 +38,7 @@ export default function createJSONAPIReducer (reducerId, config) {
     const { id } = resource
 
     draftState[type][id] = mergeMethod(
+      draftState,
       draftState[type][id] ?? {},
       reducer ? reducer(resource) : resource,
     )
