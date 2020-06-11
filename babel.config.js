@@ -1,10 +1,18 @@
 module.exports = {
   presets: [
-    '@babel/preset-env',
+    [
+      '@babel/env',
+      {
+        bugfixes: true,
+        shippedProposals: true,
+      },
+    ],
   ],
   plugins: [
     ['@babel/proposal-decorators', { legacy: true }],
     ['@babel/proposal-class-properties', { loose: true }],
+    ['@babel/proposal-private-methods', { loose: true }],
+    ['@babel/proposal-private-property-in-object', { loose: true }],
     '@babel/proposal-export-default-from',
     '@babel/proposal-export-namespace-from',
     '@babel/proposal-function-bind',
