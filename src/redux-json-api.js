@@ -143,7 +143,7 @@ export default function createJSONAPIReducer (reducerId, config) {
           return [
             ...targetData,
             ...newData.map((newLink) => {
-              return newData === RESOURCE
+              return newLink === RESOURCE
                 ? { type: action.payload.data.type, id: action.payload.data.id }
                 : newLink
             }),
