@@ -1,17 +1,17 @@
 import isRequired from '@fuelrats/argument-validator-utils/isRequired'
 import { produce } from 'immer'
 
-const JSONAPI_SCOPE = '__jsonapi'
-const CREATES_RELATIONSHIP = `${JSONAPI_SCOPE}/create/relationship`
-const DELETES_RELATIONSHIP = `${JSONAPI_SCOPE}/delete/relationship`
-const DELETES_RESOURCE = `${JSONAPI_SCOPE}/delete/resource`
-const RESOURCE = `${JSONAPI_SCOPE}/resource-linkage`
-
 
 
 
 
 export default function createJSONAPIReducer (reducerId, config) {
+  const JSONAPI_SCOPE = `__jsonapi/${reducerId}`
+  const CREATES_RELATIONSHIP = `${JSONAPI_SCOPE}/create/relationship`
+  const DELETES_RELATIONSHIP = `${JSONAPI_SCOPE}/delete/relationship`
+  const DELETES_RESOURCE = `${JSONAPI_SCOPE}/delete/resource`
+  const RESOURCE = `${JSONAPI_SCOPE}/resource-linkage`
+
   const resolveResourceConfig = (resource) => {
     if (!resource || !config[resource.type]) {
       return undefined
@@ -104,7 +104,7 @@ export default function createJSONAPIReducer (reducerId, config) {
     })
   }
 
-  return produce((draftState, action) => {
+  const reduce = produce((draftState, action) => {
     // Don't reduce action if the action doesn't request it, or there's an error.
     if (action.meta?.[JSONAPI_SCOPE] !== reducerId || action.error) {
       return
@@ -171,32 +171,45 @@ export default function createJSONAPIReducer (reducerId, config) {
       })
     }
   })
-}
 
-export function updatesResources (reducerId) {
+  function updatesResources () {
+    return {
+      [JSONAPI_SCOPE]: reducerId,
+    }
+  }
+
+  function deletesResource ({ type, id }) {
+    return {
+      [DELETES_RESOURCE]: { type, id },
+    }
+  }
+
+  function createsRelationship (...relations) {
+    return {
+      [CREATES_RELATIONSHIP]: relations,
+    }
+  }
+
+  function deletesRelationship (...relations) {
+    return {
+      [DELETES_RELATIONSHIP]: relations,
+    }
+  }
+
+
+
   return {
-    [JSONAPI_SCOPE]: reducerId,
+    reduce,
+    updatesResources,
+    deletesResource,
+    createsRelationship,
+    deletesRelationship,
   }
 }
 
-export function deletesResource (reducerId, { type, id }) {
-  return {
-    [JSONAPI_SCOPE]: reducerId,
-    [DELETES_RESOURCE]: { type, id },
-  }
-}
 
-export function createsRelationship (...relations) {
-  return {
-    [CREATES_RELATIONSHIP]: relations,
-  }
-}
 
-export function deletesRelationship (...relations) {
-  return {
-    [DELETES_RELATIONSHIP]: relations,
-  }
-}
+
 
 export function defineRelationship (
   type = isRequired('type'),
