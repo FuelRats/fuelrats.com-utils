@@ -74,6 +74,10 @@ export default function createJSONAPIReducer (reducerId, config) {
 
   const mapModifiedRelationshipData = (draftState, resources, callback) => {
     resources.forEach((resource) => {
+      if (!resource) {
+        return
+      }
+
       const {
         type,
         id,
@@ -199,6 +203,7 @@ export default function createJSONAPIReducer (reducerId, config) {
 
 
   return {
+    RESOURCE,
     reduce,
     updatesResources,
     deletesResource,
@@ -212,9 +217,10 @@ export default function createJSONAPIReducer (reducerId, config) {
 
 
 export function defineRelationship (
-  type = isRequired('type'),
-  id = isRequired('id'),
+  relatedResource,
   relationships = isRequired('relationships'),
 ) {
-  return { type, id, relationships }
+  return relatedResource
+    ? { type: relatedResource.type, id: relatedResource.id, relationships }
+    : null
 }

@@ -26,11 +26,15 @@ export interface JSONAPIRelationshipUpdateConfig {
 }
 
 export default function createJSONAPIReducer(reducerId: string, config: JSONAPISliceConfigsObject): {
-  reduce: Reducer,
+  reduce: Reducer;
+  RESOURCE: Readonly<string>;
   updatesResources: () => PartialFSAMeta;
   deletesResource: (resource: JSONAPIResourceIdentifier) => PartialFSAMeta;
-  createsRelationship: (...relations: JSONAPIRelationshipUpdateConfig[]) => PartialFSAMeta;
-  deletesRelationship: (...relations: JSONAPIRelationshipUpdateConfig[]) => PartialFSAMeta;
+  createsRelationship: (...relations: (null | JSONAPIRelationshipUpdateConfig)[]) => PartialFSAMeta;
+  deletesRelationship: (...relations: (null | JSONAPIRelationshipUpdateConfig)[]) => PartialFSAMeta;
 };
 
-export declare function defineRelationship(type?: string, id?: string, relationships?: JSONAPIRelationshipReferencesObject): JSONAPIRelationshipUpdateConfig;
+export declare function defineRelationship(
+  relatedResource: JSONAPIResourceIdentifier,
+  relationships?: JSONAPIRelationshipReferencesObject
+): (null | JSONAPIRelationshipUpdateConfig);
