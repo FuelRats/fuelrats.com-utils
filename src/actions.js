@@ -1,4 +1,4 @@
-import isRequired from '@fuelrats/argument-validator-utils/isRequired'
+import isRequired from '@fuelrats/validation-util/require'
 
 import { HttpStatus } from './http'
 

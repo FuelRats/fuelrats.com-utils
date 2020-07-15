@@ -947,17 +947,17 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@fuelrats/argument-validator-utils@^1.1.0-canary.4":
-  version "1.1.0-canary.4"
-  resolved "https://registry.yarnpkg.com/@fuelrats/argument-validator-utils/-/argument-validator-utils-1.1.0-canary.4.tgz#0cb8f862286e4dab8390a0c0597de170cf256155"
-  integrity sha512-wnARO22lR2uKYZ87qc+Et5b+DstE4O7vf8Ejr+22BBjhxm07kC3VfNQ7icQdjwLtQDNRGUFuLEzsh+PITK3OfQ==
-
 "@fuelrats/eslint-config@^2.2.0-canary.2":
   version "2.2.0-canary.2"
   resolved "https://registry.yarnpkg.com/@fuelrats/eslint-config/-/eslint-config-2.2.0-canary.2.tgz#a3dfaca11a3a34c98c3908b73bcd96efac327ad6"
   integrity sha512-qJgPcmP8sAsZc4Hhsp22Vve1C1I6LP3/6AHshFQiP7C4gLI6spe4GSjrkx0vR22fZeF+wqigOg8vzuoXrs1L3g==
   dependencies:
     eslint-restricted-globals "^0.2.0"
+
+"@fuelrats/validation-util@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@fuelrats/validation-util/-/validation-util-1.1.2.tgz#cda434bc92c292b681dad8d29840ecf2152dd399"
+  integrity sha512-sqobLeQO3yMGnIh2k1jRM7/zL28h/vDLQMJwHRyb37FnrWtnkLIJ5IhquqIFynHZtLxNi6qsQyKSHnz3QOrCLA==
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
