@@ -32,7 +32,7 @@ export declare function createAxiosFSA(type: string, response: AxiosResponse<JSO
 
 export declare function axiosRequest(
   service: AxiosInstance,
-  ...commmonMeta: PartialFSAMeta[]
+  ...commonMeta: PartialFSAMeta[]
 ): (
   type: string,
   config: AxiosRequestConfig,

@@ -69,7 +69,7 @@ export function createAxiosFSA (type, response, ...meta) {
   }
 }
 
-export function axiosRequest (service, ...commmonMeta) {
+export function axiosRequest (service, ...commonMeta) {
   return (type = isRequired('type'), config, ...meta) => {
     return async (dispatch) => {
       const response = await service.request(config)
@@ -78,7 +78,7 @@ export function axiosRequest (service, ...commmonMeta) {
         createAxiosFSA(
           type,
           response,
-          ...commmonMeta,
+          ...commonMeta,
           ...meta,
         ),
       )
