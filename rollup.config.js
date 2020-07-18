@@ -32,6 +32,7 @@ const config = [
   makeBundle('src/actions.js', 'dist/actions.js'),
   makeBundle('src/http.js', 'dist/http.js'),
   makeBundle('src/redux-json-api.js', 'dist/redux-json-api.js'),
+  makeBundle('src/redux-middleware.js', 'dist/redux-middleware.js'),
   makeBundle('src/reducers.js', 'dist/reducers.js', [
     copy({
       targets: [
