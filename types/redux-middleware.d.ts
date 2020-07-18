@@ -1,5 +1,5 @@
 import { Middleware } from "redux"
 
-export declare type FSAComplianceMiddleware = Middleware;
+export declare const FSAComplianceMiddleware: Middleware;
 
-export declare function errorLoggerMiddleware(ignoredTypes?: Array<any>): Middleware;
+export declare const errorLoggerMiddleware: (ignoredTypes?: Array<any>) => Middleware;
