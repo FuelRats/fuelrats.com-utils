@@ -1,9 +1,14 @@
 import { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 import { Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk'
 
 import { HttpStatus, HttpMethod, HttpStatusText } from './http';
 import { FSAction, PartialFSAMeta, FSAMeta } from './flux-standard-action';
 import { JSONAPIDocument } from './json-api';
+
+
+
+
 
 export interface AxiosFSAMeta extends FSAMeta {
   request: {
@@ -37,4 +42,4 @@ export declare function axiosRequest(
   type: string,
   config: AxiosRequestConfig,
   ...meta: PartialFSAMeta[]
-) => (dispatch: Dispatch) => Promise<AxiosFSA>;
+) => ThunkAction<AxiosFSA, unknown, unknown, AxiosFSA>;
