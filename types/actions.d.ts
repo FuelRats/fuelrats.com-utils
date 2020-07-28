@@ -1,5 +1,4 @@
 import { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
-import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk'
 
 import { HttpStatus, HttpMethod, HttpStatusText } from './http';
