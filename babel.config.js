@@ -21,6 +21,7 @@ module.exports = {
     '@babel/proposal-numeric-separator',
     '@babel/proposal-optional-catch-binding',
     '@babel/proposal-throw-expressions',
+    '@babel/transform-runtime',
     '@babel/transform-strict-mode',
   ],
 }

@@ -21,7 +21,7 @@ function makeBundle (input, output, plugins = []) {
     plugins: [
       nodeExternals({ deps: true }),
       resolve(),
-      babel({ babelHelpers: 'bundled' }),
+      babel({ babelHelpers: 'runtime' }),
       ...plugins,
     ],
   }
