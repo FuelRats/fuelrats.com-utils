@@ -1,6 +1,6 @@
 {
   "name": "@fuelrats/web-util",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Utility package for the fuelrats.com website. Mainly contains redux tools",
   "repository": {
     "type": "git",
