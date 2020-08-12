@@ -4,6 +4,7 @@ import { FSAction } from './flux-standard-action'
 
 export interface ReduxEventSourceInit extends EventSourceInit {
   namespaceSeparator?: string
+  headers?: { [header: string]: string };
   transformMessage (action: FSAction, event: MessageEvent): FSAction
 }
 

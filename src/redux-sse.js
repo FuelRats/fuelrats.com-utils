@@ -1,4 +1,5 @@
 import validate from '@fuelrats/validation-util'
+import { EventSourcePolyfill } from 'event-source-polyfill'
 import UUID from 'pure-uuid'
 
 import { createFSA } from './actions'
@@ -60,7 +61,7 @@ class ReduxEventSource {
     validateConnect({ url: this.#url, dispatch: this.#dispatch })
 
     const { withCredentials, transformMessage } = this.#options
-    this.#source = new EventSource(this.#url + (paramString ? `?${paramString}` : ''), { withCredentials })
+    this.#source = new EventSourcePolyfill(this.#url + (paramString ? `?${paramString}` : ''), { withCredentials })
 
     this.#source.onopen = (event) => {
       this.#dispatch(createFSA(this.getType(SSE_OPEN), event, false))
