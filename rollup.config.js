@@ -18,7 +18,7 @@ function makeBundle (input, output, plugins = []) {
       './reducers',
       './redux-json-api',
       './redux-middleware',
-      './redux-sse',
+      './redux-ratsocket',
     ],
     plugins: [
       nodeExternals({ deps: true }),
@@ -34,7 +34,7 @@ const config = [
   makeBundle('src/actions.js', 'dist/actions.js'),
   makeBundle('src/http.js', 'dist/http.js'),
   makeBundle('src/redux-json-api.js', 'dist/redux-json-api.js'),
-  makeBundle('src/redux-sse.js', 'dist/redux-sse.js'),
+  makeBundle('src/redux-ratsocket.js', 'dist/redux-ratsocket.js'),
   makeBundle('src/redux-middleware.js', 'dist/redux-middleware.js'),
   makeBundle('src/reducers.js', 'dist/reducers.js', [
     copy({
