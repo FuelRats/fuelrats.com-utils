@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     '@fuelrats/eslint-config',
+    '@fuelrats/eslint-config/plugins/fuelrats',
   ],
   rules: {
     'jsdoc/require-jsdoc': ['off'],
