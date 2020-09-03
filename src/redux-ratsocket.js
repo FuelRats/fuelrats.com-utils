@@ -57,7 +57,8 @@ class ReduxRatSocket {
 
     validateConnect({ dispatch: this.#dispatch })
 
-    const { transformMessage, params } = this.#options
+    const { transformAction, params } = this.#options
+
     this.#socket = new WebSocket(this.#url + (params ? `?${params}` : ''), ['FR-JSONAPI-WS'])
 
     this.#socket.onopen = (event) => {
@@ -71,27 +72,22 @@ class ReduxRatSocket {
         this.#reconnectTimeout = window.setTimeout(this.connect, CONNECT_RETRY_TIMEOUT)
       }
 
-      this.#dispatch(
-        createFSA(
-          this.getType(wasClean ? SOCKET_CLOSE : SOCKET_ERROR),
-          { code, reason, wasClean },
-        ),
-      )
+      this.#dispatch(createFSA(this.getType(SOCKET_CLOSE), { code, reason, wasClean }))
     }
 
     this.#socket.onmessage = (event) => {
-      const [eventType, sender, data] = JSON.parse(event.data)
+      const [eventType, userId, resourceId, data] = JSON.parse(event.data)
 
-      if (typeof sender === 'number') {
+      if (typeof userId === 'number') {
         return // we only understand events right now. Request responses use a http status code in the 2nd position so this is how we detect them.
       }
 
       const type = this.getType(SOCKET_MESSAGE, eventType)
 
-      let action = createFSA(type, data, false, { sender })
+      let action = createFSA(type, data, false, { userId, resourceId })
 
-      if (transformMessage) {
-        action = transformMessage(action, event)
+      if (transformAction) {
+        action = transformAction(action, event)
 
         if (!action) {
           return

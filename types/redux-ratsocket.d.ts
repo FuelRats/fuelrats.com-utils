@@ -3,7 +3,7 @@ import { Reducer, AnyAction, Action, Dispatch, Middleware } from 'redux'
 import { FSAction } from './flux-standard-action'
 
 export interface ReduxRatSocketInit {
-  transformMessage (action: FSAction, event: MessageEvent): FSAction
+  transformAction (action: FSAction, event: MessageEvent): FSAction
 }
 
 export interface ReducerDict<S = any, A extends Action<any> = AnyAction> {
@@ -17,10 +17,10 @@ export type WebSocketReadyState = {
   CLOSED: number;
 }
 
-export declare const SSE_CLOSE: string;
-export declare const SSE_ERROR: string;
-export declare const SSE_MESSAGE: string;
-export declare const SSE_OPEN: string;
+export declare const SOCKET_CLOSE: string;
+export declare const SOCKET_ERROR: string;
+export declare const SOCKET_MESSAGE: string;
+export declare const SOCKET_OPEN: string;
 
 export default class ReduxRatSocket {
   constructor(url: string, options?: ReduxRatSocketInit);
