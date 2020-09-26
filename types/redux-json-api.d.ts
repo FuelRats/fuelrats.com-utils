@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 
-import { JSONAPIResource, JSONAPIResourceIdentifier } from './json-api';
+import { JSONAPIRelationshipsObject, JSONAPIResource, JSONAPIResourceIdentifier } from './json-api';
 import { PartialFSAMeta } from './flux-standard-action';
 
 export interface JSONAPISliceConfig {
@@ -24,6 +24,12 @@ export interface JSONAPIRelationshipUpdateConfig {
   type: string;
   relationships: JSONAPIRelationshipReferencesObject;
 }
+
+export declare function deepMergeResource<
+  T extends string = string,
+  A extends object =(object | undefined),
+  R extends JSONAPIRelationshipsObject = (JSONAPIRelationshipsObject | undefined)
+>(target: JSONAPIResource<T, A, R>, source: JSONAPIResource<T, A, R>): JSONAPIResource<T, A, R>;
 
 export default function createJSONAPIReducer(reducerId: string, config: JSONAPISliceConfigsObject): {
   reduce: Reducer;

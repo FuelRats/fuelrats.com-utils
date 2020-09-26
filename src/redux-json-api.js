@@ -2,6 +2,44 @@ import isRequired from '@fuelrats/validation-util/require'
 import { produce } from 'immer'
 
 
+export function deepMergeResource (target, source) {
+  // Do not merge if there is a ID or Type mismatch
+  if (target.id !== source.id || target.type !== source.type) {
+    return target
+  }
+
+  // Merge attributes
+  if (source.attributes) {
+    target.attributes = {
+      ...(target.attributes ?? {}),
+      ...(source.attributes ?? {}),
+    }
+  }
+
+  // Merge meta
+  if (source.meta) {
+    target.meta = {
+      ...(target.meta ?? {}),
+      ...(source.meta ?? {}),
+    }
+  }
+
+  // Iterate over source relationships. If the given relationship has data, merge it. Otherwise, leave it alone.
+  if (source.relationships) {
+    if (target.relationships) {
+      Object.keys(source.relationships).forEach((key) => {
+        if (Reflect.has(source.relationships[key], 'data')) {
+          target.relationships[key] = source.relationships[key]
+        }
+      })
+    } else {
+      target.relationships = { ...source.relationships }
+    }
+  }
+
+  return target
+}
+
 
 
 
@@ -20,7 +58,7 @@ export default function createJSONAPIReducer (reducerId, config) {
     return {
       target: resource.type,
       mergeMethod: (_, target, source) => {
-        return Object.assign(target, source)
+        return deepMergeResource(target, source)
       },
       ...config[resource.type],
     }
@@ -37,11 +75,17 @@ export default function createJSONAPIReducer (reducerId, config) {
     } = resourceConfig
     const { id } = resource
 
-    draftState[type][id] = mergeMethod(
-      draftState,
-      draftState[type][id] ?? {},
-      reducer ? reducer(resource) : resource,
-    )
+    const finalResource = reducer ? reducer(resource) : resource
+
+    if (draftState[type][id]) {
+      draftState[type][id] = mergeMethod(
+        draftState,
+        draftState[type][id],
+        finalResource,
+      )
+    } else {
+      draftState[type][id] = finalResource
+    }
   }
 
   const insertResourceList = (draftState, resources = []) => {

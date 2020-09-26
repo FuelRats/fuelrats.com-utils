@@ -51,7 +51,7 @@ export interface JSONAPIRelationshipsObject {
 
 export interface JSONAPIResource<
   T extends string = string,
-  A extends object =(object | undefined),
+  A extends object = (object | undefined),
   R extends JSONAPIRelationshipsObject = (JSONAPIRelationshipsObject | undefined)
 > extends JSONAPIResourceIdentifier<T> {
   attributes: A
