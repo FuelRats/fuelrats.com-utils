@@ -4,7 +4,7 @@ import { HttpStatus } from './http'
 
 
 
-
+const jsonTypes = ['application/json', 'application/vnd.api+json']
 
 const mergeMeta = (meta) => {
   return meta.reduce((acc, metaData) => {
@@ -43,7 +43,7 @@ export function createAxiosFSA (type, response, ...meta) {
 
   let requestBody = config.data
 
-  if (config.headers['Content-Type'] === 'application/json') {
+  if (jsonTypes.includes(config.headers['Content-Type']?.toLowerCase())) {
     requestBody = JSON.parse(requestBody)
   }
 
